@@ -19,6 +19,18 @@ export default {
     commit("SET_SITE_DATA", data)
   },
 
+  createProject({ commit }, data) {
+    const endpoint = '/api/v/1/project'
+
+    return new Promise((resolve, reject) => {
+      axios.get(endpoint).then(resp => {
+        axios.post(endpoint, data, {
+          headers: resp.data
+        }).then(resolve)
+      }).catch(reject)
+    })
+  },
+
   getPageData({ commit }, path) {
     commit('SET_ERROR', null)
     commit('SET_SITE_DATA', null)

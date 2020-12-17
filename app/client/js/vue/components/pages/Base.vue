@@ -1,7 +1,5 @@
 <template>
-<v-main>
-    <component v-if="site_data" :is="site_data.pagetype" />
-</v-main>
+<component v-if="site_data" :is="site_data.pagetype" />
 </template>
 
 <script>
