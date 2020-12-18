@@ -50,6 +50,32 @@
   >
     <v-app-bar-nav-icon @click.prevent="drawer = !drawer"></v-app-bar-nav-icon>
     <h1 v-if="site_data" class="v-toolbar__title">{{ site_data.title }}</h1>
+    <v-spacer></v-spacer>
+    <v-menu
+      v-if="$route.path != '/'"
+      left
+      bottom
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          icon
+          v-bind="attrs"
+          v-on="on"
+        >
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn>
+      </template>
+
+      <v-list>
+        <v-list-item
+          v-for="n in 5"
+          :key="n"
+          @click="() => {}"
+        >
+          <v-list-item-title>Option {{ n }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
   </v-app-bar>
 
   <v-main>
@@ -76,7 +102,6 @@ export default {
         { title: 'Invoice', icon: 'mdi-currency-usd', route: "/invoices" },
         { title: 'Users', icon: 'mdi-account-group-outline', route: "/users" },
       ],
-      right: null,
     }
   },
   watch: {

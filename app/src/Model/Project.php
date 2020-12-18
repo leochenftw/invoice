@@ -53,14 +53,6 @@ class Project extends DataObject
         $this->URLSegment = URLSegmentFilter::singleton()->filter($this->Title);
     }
 
-    public function onAfterWrite()
-    {
-        parent::onAfterWrite();
-        if ($this->ProjectOwner()->exists() && !$this->Users()->byID($this->ProjectOwnerID)) {
-            $this->Users()->add($this->ProjectOwner());
-        }
-    }
-
     public function getData()
     {
         return [

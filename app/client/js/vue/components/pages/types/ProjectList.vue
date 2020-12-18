@@ -1,5 +1,5 @@
 <template>
-<v-content tag="div">
+<section class="section">
   <v-alert
     v-if="!site_data.list.length"
     type="warning"
@@ -27,7 +27,7 @@
     </v-row>
   </template>
   <FormProject ref="form_project" />
-</v-content>
+</section>
 </template>
 <script>
 import FormProject from "../../blocks/FormProject"

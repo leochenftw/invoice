@@ -27,10 +27,16 @@
           <v-col
             cols="12"
           >
-            <v-autocomplete
-              :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
+            <v-combobox
+              v-model="client"
+              :items="clients"
               label="Client"
-            ></v-autocomplete>
+              item-text="title"
+              item-value="id"
+              :loading="searching"
+              :search-input.sync="search"
+              hide-selected
+            ></v-combobox>
           </v-col>
         </v-row>
       </v-container>
@@ -63,9 +69,27 @@ export default {
   data() {
     return {
       submitting: false,
+      searching: false,
       dialog: false,
       title: null,
       description: null,
+      clients: [],
+      client: null,
+      search: null
+    }
+  },
+  watch: {
+    search(nv) {
+      console.log(this.client)
+      if (nv && nv.trim().length) {
+        this.searching = true
+        this.$store.dispatch("searchClient", nv).then(resp => {
+          this.searching = false
+          this.clients = resp.data
+        }).catch(error => {
+          this.searching = false
+        })
+      }
     }
   },
   methods: {
@@ -74,7 +98,21 @@ export default {
 
       const data = new FormData();
       data.append("title", this.title)
-      data.append("description", this.description)
+      if (this.description) {
+        data.append("description", this.description)
+      }
+
+      if (this.search && this.search.trim().length && !this.client) {
+        this.client = this.search.trim()
+      }
+
+      if (this.client) {
+        if (typeof this.client === "string") {
+          data.append("client", JSON.stringify({id: false, title: this.client}))
+        } else {
+          data.append("client", JSON.stringify(this.client))
+        }
+      }
 
       this.$store.dispatch("createProject", data).then(resp => {
         this.dialog = this.submitting = false

@@ -17,3 +17,4 @@ SilverStripe\Control\Director:
     'api/v/1/project/$id' : 'App\Web\API\ProjectAPI'
     'projects/$slug': 'App\Web\Controller\ProjectController'
     'clients/$slug': 'App\Web\Controller\ClientController'
+    'api/v/1/search-clients/$search': 'App\Web\API\ClientSearchAPI'

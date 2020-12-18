@@ -2,6 +2,8 @@ import axios from "axios"
 axios.defaults.headers.common = {
   'X-Requested-With': 'XMLHttpRequest'
 }
+const cancelTokenSource = axios.CancelToken.source()
+
 export default {
   setLoading({ commit }, status) {
     commit("SET_ISLOADING", status)
@@ -28,6 +30,14 @@ export default {
           headers: resp.data
         }).then(resolve)
       }).catch(reject)
+    })
+  },
+
+  searchClient({ commit }, data) {
+    return new Promise((resolve, reject) => {
+      axios.get(`/api/v/1/search-clients/${data}`, {
+        cancelToken: cancelTokenSource.token
+      }).then(resolve).catch(reject)
     })
   },
 
