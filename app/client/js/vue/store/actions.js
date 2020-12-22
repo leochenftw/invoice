@@ -33,6 +33,30 @@ export default {
     })
   },
 
+  createWorkflow({ commit }, data) {
+    const endpoint = `/api/v/1/project/${data.get("project_id")}/createWorkflow`
+
+    return new Promise((resolve, reject) => {
+      axios.get(endpoint).then(resp => {
+        axios.post(endpoint, data, {
+          headers: resp.data
+        }).then(resolve)
+      }).catch(reject)
+    })
+  },
+
+  createWorkflowUserStory({ commit }, data) {
+    const endpoint = `/api/v/1/workflow/${data.get("id")}/addUserStory`
+
+    return new Promise((resolve, reject) => {
+      axios.get(endpoint).then(resp => {
+        axios.post(endpoint, data, {
+          headers: resp.data
+        }).then(resolve)
+      }).catch(reject)
+    })
+  },
+
   searchClient({ commit }, data) {
     return new Promise((resolve, reject) => {
       axios.get(`/api/v/1/search-clients/${data}`, {

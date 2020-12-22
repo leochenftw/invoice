@@ -3,11 +3,11 @@
 namespace App\Web\Model;
 
 use SilverStripe\Assets\Image;
+use SilverStripe\CMS\Forms\SiteTreeURLSegmentField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\Parsers\URLSegmentFilter;
-use SilverStripe\CMS\Forms\SiteTreeURLSegmentField;
 
-class Project extends DataObject
+class Project extends DataObject implements \JsonSerializable
 {
     private static $table_name = 'Project';
 
@@ -15,6 +15,10 @@ class Project extends DataObject
         'Title' => 'Varchar(128)',
         'Content' => 'Text',
         'URLSegment' => 'Varchar(1024)',
+    ];
+
+    private static $indexes = [
+        'URLSegment' => true,
     ];
 
     private static $default_sort = ['Created' => 'DESC'];
@@ -33,7 +37,8 @@ class Project extends DataObject
     ];
 
     /**
-     * CMS Fields
+     * CMS Fields.
+     *
      * @return FieldList
      */
     public function getCMSFields()
@@ -42,8 +47,9 @@ class Project extends DataObject
         $fields->replaceField(
             'URLSegment',
             SiteTreeURLSegmentField::create('URLSegment', 'Slug')
-                ->setURLPrefix(URLSegmentFilter::singleton()->filter($this->plural_name())  . '/')
+                ->setURLPrefix(URLSegmentFilter::singleton()->filter($this->plural_name()) . '/')
         );
+
         return $fields;
     }
 
@@ -60,6 +66,20 @@ class Project extends DataObject
             'title' => $this->Title,
             'client' => $this->Client()->exists() ? $this->Client()->Title : null,
             'slug' => $this->URLSegment,
+            'background' => $this->Background()->exists() ? $this->Background()->Fit(356, 200)->URL : '//placekitten.com/356/200',
+        ];
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->ID,
+            'title' => $this->Title,
+            'client' => $this->Client()->exists() ? $this->Client()->Title : null,
+            'slug' => $this->URLSegment,
+            'background' => $this->Background()->exists() ? $this->Background()->Fit(1920, 1080)->URL : '//placekitten.com/1920/1080',
+            'workflows' => $this->Workflows()->Data,
+            'pagetype' => 'Project',
         ];
     }
 }

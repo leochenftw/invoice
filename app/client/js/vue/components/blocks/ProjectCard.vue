@@ -3,7 +3,7 @@
   <v-img
     class="white--text align-end"
     height="200px"
-    src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+    :src="project.background"
   >
     <v-card-title>{{ project.title }}</v-card-title>
   </v-img>

@@ -5,6 +5,6 @@ export default {
     },
     site_nav() {
       return this.site_data.navigation
-    }
+    },
   },
 }

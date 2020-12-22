@@ -2,10 +2,10 @@
 
 namespace App\Web\Controller;
 
-use SilverStripe\Core\Convert;
-use PageController;
 use App\Web\Model\Project;
 use Page;
+use PageController;
+use SilverStripe\Core\Convert;
 
 class ProjectController extends PageController
 {
@@ -17,9 +17,7 @@ class ProjectController extends PageController
         $data = Page::create()->Data;
 
         if (!empty($slug)) {
-            return [
-                'slug' => $slug,
-            ];
+            return array_merge($data, $this->getProject($slug), ['pagetype' => 'Project']);
         }
 
         $page = Convert::raw2sql($this->request->getVar('page'));
@@ -29,7 +27,16 @@ class ProjectController extends PageController
         $data['pagetype'] = 'ProjectList';
 
         return array_merge($data, [
-          'list' => Project::get()->limit(12, $page)->Data,
+            'list' => Project::get()->limit(12, $page)->Data,
         ]);
+    }
+
+    private function getProject($slug)
+    {
+        if ($project = Project::get()->filter(['URLSegment' => $slug])->first()) {
+            return $project->jsonSerialize();
+        }
+
+        return $this->httpError(404);
     }
 }

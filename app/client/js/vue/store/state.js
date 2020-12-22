@@ -2,5 +2,7 @@ export default {
   isLoading: false,
   isMobile: false,
   error: null,
-  site_data: window.appInitialData,
+  site_data: null,
+  page_menu: [],
+  dragging_story: false,
 }

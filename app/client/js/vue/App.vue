@@ -1,48 +1,48 @@
 <template>
-<v-app>
+<v-app :class="{'has-bg': site_data ? site_data.background : false}">
   <v-navigation-drawer
     app
     absolute
     temporary
     v-model="drawer"
   >
-      <v-list-item>
+    <v-list-item>
+      <v-list-item-content>
+        <v-list-item-title class="title">
+          Application
+        </v-list-item-title>
+        <v-list-item-subtitle>
+          subtext
+        </v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
+    <v-divider></v-divider>
+
+    <v-list
+      dense
+      nav
+    >
+      <v-list-item
+        v-for="item in items"
+        :key="item.title"
+        :to="item.route"
+      >
+        <v-list-item-icon>
+          <v-icon>{{ item.icon }}</v-icon>
+        </v-list-item-icon>
+
         <v-list-item-content>
-          <v-list-item-title class="title">
-            Application
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            subtext
-          </v-list-item-subtitle>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
-      <v-divider></v-divider>
-
-      <v-list
-        dense
-        nav
-      >
-        <v-list-item
-          v-for="item in items"
-          :key="item.title"
-          :to="item.route"
-        >
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-      <template v-slot:append>
-        <div class="pa-2">
-          <v-btn block>
-            Logout
-          </v-btn>
-        </div>
-      </template>
+    </v-list>
+    <template v-slot:append>
+      <div class="pa-2">
+        <v-btn block>
+          Logout
+        </v-btn>
+      </div>
+    </template>
   </v-navigation-drawer>
 
   <v-app-bar
@@ -52,8 +52,8 @@
     <h1 v-if="site_data" class="v-toolbar__title">{{ site_data.title }}</h1>
     <v-spacer></v-spacer>
     <v-menu
-      v-if="$route.path != '/'"
-      left
+      v-if="$store.state.page_menu.length"
+      right
       bottom
     >
       <template v-slot:activator="{ on, attrs }">
@@ -68,25 +68,21 @@
 
       <v-list>
         <v-list-item
-          v-for="n in 5"
-          :key="n"
-          @click="() => {}"
+          v-for="item in $store.state.page_menu"
+          :key="item.title"
+          @click.prevent="item.method"
         >
-          <v-list-item-title>Option {{ n }}</v-list-item-title>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
   </v-app-bar>
 
   <v-main>
-    <v-container fluid>
+    <v-container class="root" fluid>
       <router-view></router-view>
     </v-container>
   </v-main>
-
-  <v-footer app>
-
-  </v-footer>
 </v-app>
 </template>
 <script>
@@ -106,11 +102,18 @@ export default {
   },
   watch: {
     $route(to) {
+      this.$store.state.page_menu = [];
       this.$store.dispatch("getPageData", to.fullPath)
     }
   },
   created() {
+    this.$store.dispatch("setSiteData", window.appInitialData)
     console.log(this.site_data)
+  },
+  mounted() {
+    if (this.site_data) {
+      document.title = this.site_data.title
+    }
   }
 }
 </script>

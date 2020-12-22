@@ -4,6 +4,35 @@
 
 #app {
   transition: all ease-out .5s;
+  &.has-bg {
+    &:before,
+    &:after {
+      content: '';
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      left: 0;
+      top: 0;
+      pointer-events: none;
+    }
+
+    &:before {
+      filter: blur(12px);
+      background-image: var(--bgimg);
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+    }
+
+    &:after {
+      z-index: 1;
+    }
+  }
+
+  .v-application--wrap {
+    z-index: 2;
+  }
+
   &.v-application {
     opacity: 1;
     visibility: visible;

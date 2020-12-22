@@ -5,6 +5,7 @@ namespace App\Web\API;
 use App\Web\Controller\ProjectController;
 use App\Web\Model\Client;
 use App\Web\Model\Project;
+use App\Web\Model\Workflow;
 use Leochenftw\Restful\RestfulController;
 use Leochenftw\Util;
 use SilverStripe\Core\Convert;
@@ -12,6 +13,7 @@ use SilverStripe\Security\SecurityToken;
 
 class ProjectAPI extends RestfulController
 {
+    private $project;
     /**
      * Defines methods that can be called directly.
      *
@@ -30,36 +32,74 @@ class ProjectAPI extends RestfulController
     public function post($request)
     {
         if (Util::check_csrf($request)) {
-            $title = Convert::raw2sql($request->postVar('title'));
-            $desc = Convert::raw2sql($request->postVar('description'));
-            $client_data = $request->postVar('client');
+            $id = Convert::raw2sql($request->param('id'));
+            $action = Convert::raw2sql($request->param('action'));
 
-            $project = Project::create();
-            $project->Title = $title;
-
-            if (!empty($desc)) {
-                $project->Content = $desc;
+            if (!empty($id)) {
+                $this->project = Project::get()->byID($id);
             }
 
-            if (!empty($client_data)) {
-                $client_data = json_decode($client_data);
-                if (empty($client_data->id)) {
-                    $client = Client::create();
-                } else {
-                    $client = Client::get()->byID(Convert::raw2sql($client_data->id));
-                }
-
-                $client->Title = Convert::raw2sql($client_data->title);
-                $client->write();
-
-                $project->ClientID = $client->ID;
+            if ($this->hasMethod($action)) {
+                return $this->{$action}();
             }
-
-            $project->write();
-
-            return ProjectController::create()->Data;
         }
 
         return $this->httpError(400, 'Missing CSRF token!');
+    }
+
+    private function createWorkflow()
+    {
+        if (empty($this->project)) {
+            return $this->httpError(404, 'No such project');
+        }
+
+        $request = $this->request;
+
+        $title = Convert::raw2sql($request->postVar('title'));
+
+        $workflow = Workflow::create();
+        $workflow->Title = $title;
+        $workflow->ProjectID = $this->project->ID;
+
+        $sort = Convert::raw2sql($request->postVar('sort')) ?: $this->project->Workflows()->count();
+        $workflow->Sort = $sort;
+        $workflow->write();
+
+        return $this->project->jsonSerialize();
+    }
+
+    private function createProject()
+    {
+        $request = $this->request;
+        $title = Convert::raw2sql($request->postVar('title'));
+        $desc = Convert::raw2sql($request->postVar('description'));
+        $client_data = $request->postVar('client');
+
+        if (empty($this->project)) {
+            $this->project = Project::create();
+            $this->project->Title = $title;
+        }
+
+        if (!empty($desc)) {
+            $this->project->Content = $desc;
+        }
+
+        if (!empty($client_data)) {
+            $client_data = json_decode($client_data);
+            if (empty($client_data->id)) {
+                $client = Client::create();
+            } else {
+                $client = Client::get()->byID(Convert::raw2sql($client_data->id));
+            }
+
+            $client->Title = Convert::raw2sql($client_data->title);
+            $client->write();
+
+            $this->project->ClientID = $client->ID;
+        }
+
+        $this->project->write();
+
+        return ProjectController::create()->Data;
     }
 }
