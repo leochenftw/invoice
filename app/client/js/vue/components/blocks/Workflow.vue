@@ -29,31 +29,15 @@
     </v-menu>
   </v-card-title>
   <v-card-text>
-    <div
-      v-if="!workflow.stories.length"
-      @dragover.prevent="onDragover"
-      @drop.prevent="onDrop"
-      @dragenter.prevent="onDragenter"
-      :class="['dropzone', {'show': dragging}]"
-    ></div>
-    <div
-      v-for="item in workflow.stories"
-      @drop.prevent="onDrop"
-      @dragover.prevent="onDragover"
-      @dragenter.prevent="onDragenter"
-      :key="`${item.id}-dropzone`"
-      :class="['dropzone', {'show': dragging}]"
-    >
+    <draggable class="list-group" :list="workflow.stories" group="stories" @change="log">
       <v-card
-        :key="item.id"
         class="user-story"
-        draggable="true"
-        @dragstart="onDragStart"
-        @dragend="onDragend"
+        v-for="item in workflow.stories"
+        :key="item.id"
       >
         <v-card-title>{{ item.title }}</v-card-title>
       </v-card>
-    </div>
+    </draggable>
     <v-form
       v-if="AddNew"
       @submit.prevent="addNewUserStory"
@@ -104,18 +88,18 @@
 </template>
 
 <script>
+import draggable from "vuedraggable"
+
 export default {
   name: "Workflow",
   props: ['workflow'],
+  components: {
+    draggable
+  },
   data() {
     return {
       AddNew: false,
       UserStoryTitle: null,
-    }
-  },
-  computed: {
-    dragging() {
-      return this.$store.state.dragging_story
     }
   },
   watch: {
@@ -130,35 +114,13 @@ export default {
     }
   },
   methods: {
-    onDragover(e) {},
-    onDragenter(e) {
-      console.log(e.currentTarget)
-    },
-    onDragStart(e) {
-      this.$store.state.dragging_story = true
-      requestAnimationFrame(() => {
-        e.target.classList.add("dragged")
-      })
-    },
-    onDragend(e) {
-      this.$store.state.dragging_story = false
-      e.target.classList.remove("dragged")
-    },
-    onDrop(e) {
-      console.log(e.target)
-    },
-    onDrag() {
-
-    },
     closeForm() {
       if (this.$refs.inputfield) {
         this.AddNew = false
       }
     },
     keydownHandler(event) {
-      if ((event.ctrlKey && event.keyCode === 13) ||
-          (event.metaKey && event.keyCode === 13)
-      ) {
+      if (event.keyCode === 13) {
         this.addNewUserStory()
       }
     },
@@ -174,6 +136,9 @@ export default {
         this.UserStoryTitle = null
         this.workflow.stories.push(resp.data)
       }).catch(console.error)
+    },
+    log: function(e) {
+      console.log(e)
     }
   }
 }
@@ -197,21 +162,10 @@ export default {
     }
 
     &.user-story {
-      &.dragged {
-        transform: translateX(-9999px);
+      &:not(:last-child) {
+        margin-bottom: .5rem;
       }
     }
-  }
-}
-
-.dropzone {
-  border-radius: 4px;
-  background-color: rgba(#ccc, 0.5);
-  &:not(:last-child) {
-    margin-bottom: .5rem;
-  }
-  &.show {
-    min-height: 2rem;
   }
 }
 </style>

@@ -130,10 +130,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .row.root {
-  min-height: calc(100vh - 88px);
+  min-height: calc(100vh - 64px);
   overflow: hidden;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
 </style>
-

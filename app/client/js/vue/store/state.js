@@ -4,5 +4,4 @@ export default {
   error: null,
   site_data: null,
   page_menu: [],
-  dragging_story: false,
 }
