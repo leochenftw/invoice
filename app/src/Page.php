@@ -55,6 +55,8 @@ class Page extends SiteTree implements Flushable
             'content' => Util::preprocess_content($this->Content),
             'pagetype' => ClassInfo::shortName($this->ClassName),
             'ancestors' => $this->get_ancestors($this),
+            'site_title' => SiteConfig::current_site_config()->Title,
+            'site_slogan' => SiteConfig::current_site_config()->Tagline,
         ];
 
         if (!empty($siteconfig->Data)) {

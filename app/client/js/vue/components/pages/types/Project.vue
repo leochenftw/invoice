@@ -4,16 +4,14 @@
     class="flex-nowrap root"
   >
     <v-col
-      cols="12"
-      sm="3"
+      class="workflow-holder"
       v-for="workflow in site_data.workflows"
       :key="workflow.id"
     >
-      <Workflow :workflow="workflow" />
+      <Workflow :class="{'active': $store.state.dragging_story}" :workflow="workflow" />
     </v-col>
     <v-col
-      cols="12"
-      sm="3"
+      class="workflow-holder"
     >
       <v-btn
         width="100%"
@@ -64,15 +62,18 @@
       </v-card>
     </v-col>
   </v-row>
+  <FormUserStory :story="CurrentStory" ref="storyform" />
 </section>
 </template>
 <script>
 import Workflow from "../../blocks/Workflow"
+import FormUserStory from "../../blocks/FormUserStory"
 export default {
   name: "Project",
-  components: { Workflow },
+  components: { Workflow, FormUserStory },
   data() {
     return {
+      CurrentStory: null,
       NewWorkflow: null,
       ShowNewWorkflowForm: false,
     }
@@ -93,6 +94,10 @@ export default {
   },
   created() {
     this.$store.state.page_menu = this.Menu
+    this.$bus.$on("toggleStoryForm", this.toggleStoryForm)
+  },
+  beforeDestroy() {
+    this.$bus.$off("toggleStoryForm", this.toggleStoryForm)
   },
   watch: {
     ShowNewWorkflowForm(nv) {
@@ -104,6 +109,10 @@ export default {
     }
   },
   methods: {
+    toggleStoryForm(item) {
+      this.CurrentStory = item
+      this.$refs.storyform.dialog = !this.$refs.storyform.dialog
+    },
     closeNewWorkflowForm() {
       this.ShowNewWorkflowForm = false
     },
@@ -134,5 +143,8 @@ export default {
   overflow: hidden;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+}
+.workflow-holder {
+  max-width: 320px;
 }
 </style>

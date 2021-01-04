@@ -114,15 +114,7 @@ class PageController extends ContentController
 
     public function getInitialPageData()
     {
-        $data = $this->Data;
-
-        if ($member = Member::currentUser()) {
-            if ($member->inGroup('administrators') && $this->exists()) {
-                return json_encode(array_merge($data, ['edit_url' => $this->CMSEditLink()]));
-            }
-        }
-
-        return json_encode($data);
+        return json_encode($this->Data);
     }
 
     protected function handleAction($request, $action)
@@ -145,10 +137,6 @@ class PageController extends ContentController
             return json_encode($error_page->Data);
         }
 
-        if ($this->isAdmin() && $this->exists()) {
-            return json_encode(array_merge($this->Data, ['edit_url' => $this->CMSEditLink()]));
-        }
-
         return json_encode($this->Data);
     }
 
@@ -159,6 +147,7 @@ class PageController extends ContentController
         Requirements::css('leochenftw/leoss4bk: client/dist/vendor.css');
         Requirements::css('leochenftw/leoss4bk: client/dist/app.css');
         Requirements::javascript('leochenftw/leoss4bk: client/dist/vendor.js');
+        Requirements::javascript('leochenftw/leoss4bk: client/dist/tinymce/tinymce.min.js');
         Requirements::javascript('leochenftw/leoss4bk: client/dist/app.js');
     }
 

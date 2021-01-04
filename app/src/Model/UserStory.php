@@ -12,7 +12,12 @@ class UserStory extends DataObject implements \JsonSerializable
     private static $db = [
         'Title' => 'Varchar(128)',
         'Content' => 'HTMLText',
+        'HoursAllocated' => 'Decimal',
         'Sort' => 'Int',
+    ];
+
+    private static $default_sort = [
+        'Sort' => 'ASC',
     ];
 
     private static $has_one = [
@@ -30,12 +35,27 @@ class UserStory extends DataObject implements \JsonSerializable
         'Users' => User::class,
     ];
 
+    public function getHoursSpent()
+    {
+        if ($this->Worklogs()->exists()) {
+            return array_sum(array_map(function ($log) {
+                return $log->Hours;
+            }, $this->Worklogs()->toArray()));
+        }
+
+        return 0;
+    }
+
     public function jsonSerialize()
     {
         return array_merge(
             $this->Data,
             [
                 'content' => Util::preprocess_content($this->Content),
+                'hours_spent' => $this->HoursSpent,
+                'logs' => array_map(function ($log) {
+                    return $log;
+                }, $this->Worklogs()->toArray()),
             ]
         );
     }
@@ -45,6 +65,7 @@ class UserStory extends DataObject implements \JsonSerializable
         return [
             'id' => $this->ID,
             'title' => $this->Title,
+            'hours_allocated' => $this->HoursAllocated,
         ];
     }
 }

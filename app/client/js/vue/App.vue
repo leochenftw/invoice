@@ -3,16 +3,16 @@
   <v-navigation-drawer
     app
     absolute
-    temporary
+    permanent
     v-model="drawer"
   >
     <v-list-item>
       <v-list-item-content>
         <v-list-item-title class="title">
-          Application
+          {{ $store.state.site_title }}
         </v-list-item-title>
         <v-list-item-subtitle>
-          subtext
+          {{ $store.state.site_slogan }}
         </v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
@@ -94,6 +94,7 @@ export default {
       items: [
         { title: 'Dashboard', icon: 'mdi-view-dashboard', route: "/" },
         { title: 'My Account', icon: 'mdi-account', route: "/me" },
+        { title: 'Clients', icon: 'mdi-emoticon-excited-outline', route: "/clients" },
         { title: 'Projects', icon: 'mdi-code-braces', route: "/projects" },
         { title: 'Invoice', icon: 'mdi-currency-usd', route: "/invoices" },
         { title: 'Users', icon: 'mdi-account-group-outline', route: "/users" },

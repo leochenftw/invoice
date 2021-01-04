@@ -12,11 +12,7 @@ use SilverStripe\Security\SecurityToken;
 class WorkflowAPI extends RestfulController
 {
     private $workflow;
-    /**
-     * Defines methods that can be called directly.
-     *
-     * @var array
-     */
+
     private static $allowed_actions = [
         'get' => true,
         'post' => true,
@@ -47,6 +43,24 @@ class WorkflowAPI extends RestfulController
         return $this->httpError(400, 'Missing CSRF token!');
     }
 
+    private function rearrange()
+    {
+        if (empty($this->workflow)) {
+            return $this->httpError(404, 'No such workflow');
+        }
+
+        $list = json_decode($this->request->postVar('list'));
+
+        $n = 0;
+        foreach ($list as $item) {
+            $story = UserStory::get()->byID($item->id);
+            $story->Sort = $n;
+            $story->write();
+            $this->workflow->UserStories()->add($item->id);
+            ++$n;
+        }
+    }
+
     private function addUserStory()
     {
         if (empty($this->workflow)) {
@@ -58,6 +72,7 @@ class WorkflowAPI extends RestfulController
         $story = UserStory::create();
         $story->WorkflowID = $this->workflow->ID;
         $story->Title = $title;
+        $story->Sort = $this->workflow->UserStories()->count();
 
         $story->write();
 

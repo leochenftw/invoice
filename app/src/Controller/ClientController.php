@@ -2,10 +2,10 @@
 
 namespace App\Web\Controller;
 
-use SilverStripe\Core\Convert;
-use PageController;
 use App\Web\Model\Client;
 use Page;
+use PageController;
+use SilverStripe\Core\Convert;
 
 class ClientController extends PageController
 {
@@ -22,17 +22,6 @@ class ClientController extends PageController
             ];
         }
 
-        $mini = Convert::raw2sql($this->request->getVar('mini'));
-
-        if ($mini && !empty($mini)) {
-            return array_map(function($o) {
-              return [
-                'text' => $o->Title,
-                'value' => $o->ID,
-              ];
-            }, Client::get()->limit(5)->toArray());
-        }
-
         $page = Convert::raw2sql($this->request->getVar('page'));
         $page = empty($page) ? 0 : $page;
 
@@ -40,7 +29,49 @@ class ClientController extends PageController
         $data['pagetype'] = 'ClientList';
 
         return array_merge($data, [
-          'list' => Client::get()->limit(12, $page)->Data,
+            'list' => [
+                'headers' => [
+                    [
+                        'text' => 'Client',
+                        'align' => 'start',
+                        'sortable' => true,
+                        'value' => 'title',
+                    ],
+                    [
+                        'text' => 'Code',
+                        'align' => 'center',
+                        'sortable' => true,
+                        'value' => 'code',
+                    ],
+                    [
+                        'text' => 'Projects',
+                        'align' => 'center',
+                        'sortable' => false,
+                        'value' => 'projects',
+                    ],
+                    [
+                        'text' => 'Billable Hours',
+                        'align' => 'center',
+                        'sortable' => true,
+                        'value' => 'billable',
+                    ],
+                    [
+                        'text' => 'Outstanding Invoice(s)',
+                        'align' => 'center',
+                        'sortable' => false,
+                        'value' => 'outstanding_invoices',
+                    ],
+                    [
+                        'text' => '',
+                        'align' => 'center',
+                        'sortable' => false,
+                        'value' => 'actions',
+                    ],
+                ],
+                'clients' => array_map(function ($item) {
+                    return $item->TableData;
+                }, Client::get()->toArray()),
+            ],
         ]);
     }
 }

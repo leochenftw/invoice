@@ -13,6 +13,14 @@ export default {
     const root = document.documentElement
     if (site_data) {
       document.title = site_data.title
+      if (site_data.site_title) {
+        state.site_title = site_data.site_title
+      }
+
+      if (site_data.site_slogan) {
+        state.site_slogan = site_data.site_slogan
+      }
+
       if (site_data.background) {
         root.style.setProperty('--bgimg', `url(${site_data.background})`)
       } else {

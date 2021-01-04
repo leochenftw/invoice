@@ -30,6 +30,7 @@ class Project extends DataObject implements \JsonSerializable
 
     private static $has_many = [
         'Workflows' => Workflow::class,
+        'Worklogs' => Worklog::class,
     ];
 
     private static $many_many = [

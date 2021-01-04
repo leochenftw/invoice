@@ -2,8 +2,13 @@
 @import "https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css";
 @import "node_modules/vuetify/dist/vuetify";
 
+* {
+  user-select: none;
+}
+
 #app {
   transition: all ease-out .5s;
+
   &.has-bg {
     &:before,
     &:after {
@@ -26,6 +31,57 @@
 
     &:after {
       z-index: 1;
+    }
+  }
+
+  .v-main {
+    height: 100vh;
+    overflow: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+
+    .invoice-form {
+      .tax-no {
+        margin-bottom: 0;
+        font-size: 14px;
+      }
+
+      .invoice-footer {
+        margin-top: 3rem;
+      }
+
+      .entity {
+        font-size: 32px;
+        font-weight: normal;
+        &-address {
+          font-size: 14px;
+        }
+      }
+
+      .color {
+        &--purple {
+          color: #6D64E8;
+        }
+
+        &--dark-blue {
+          color: #283592;
+          &.h1 {
+            font-size: 48px;
+            font-weight: normal;
+          }
+        }
+      }
+
+      .v-data-table-header {
+        th {
+          @extend .color--dark-blue;
+        }
+      }
+
+      .grand-total {
+        font-size: 36px !important;
+        height: 72px;
+      }
     }
   }
 

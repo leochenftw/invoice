@@ -37,6 +37,8 @@ class ProjectAPI extends RestfulController
 
             if (!empty($id)) {
                 $this->project = Project::get()->byID($id);
+            } else {
+                $action = 'createProject';
             }
 
             if ($this->hasMethod($action)) {

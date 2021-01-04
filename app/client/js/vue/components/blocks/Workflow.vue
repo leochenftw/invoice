@@ -29,11 +29,20 @@
     </v-menu>
   </v-card-title>
   <v-card-text>
-    <draggable class="list-group" :list="workflow.stories" group="stories" @change="log">
+    <draggable
+      class="list-group"
+      v-model="workflow.stories"
+      group="stories"
+      @change="log"
+      @start="$store.state.dragging_story = true"
+      @end="$store.state.dragging_story = false"
+    >
       <v-card
         class="user-story"
         v-for="item in workflow.stories"
         :key="item.id"
+        tag="a"
+        @click.prevent="$bus.$emit('toggleStoryForm', item)"
       >
         <v-card-title>{{ item.title }}</v-card-title>
       </v-card>
@@ -138,7 +147,18 @@ export default {
       }).catch(console.error)
     },
     log: function(e) {
-      console.log(e)
+      if (e.added || e.moved) {
+        const data = {
+          id: this.workflow.id,
+          list: new FormData(),
+        }
+
+        data.list.append("list", JSON.stringify(this.workflow.stories))
+
+        this.$store.dispatch("rearrangeWorkflowList", data).then(resp => {
+
+        }).catch(console.error)
+      }
     }
   }
 }
@@ -167,5 +187,10 @@ export default {
       }
     }
   }
+}
+
+.active .list-group {
+  min-height: 2rem;
+  background-color: #f7f7f7;
 }
 </style>

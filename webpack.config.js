@@ -18,6 +18,9 @@ var config = {
         '@babel/polyfill',
         path.resolve('app/client/js/cms/cms.js'),
         path.resolve('app/client/scss/cms.scss'),
+      ],
+      pdf: [
+        path.resolve('app/client/scss/pdf.scss'),
       ]
   },
   output: {

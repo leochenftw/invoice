@@ -1,0 +1,15 @@
+#app {
+  .row {
+    &:after {
+      clear: both;
+      content: '';
+      display: table;
+    }
+
+    .col {
+      float: left;
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+}
