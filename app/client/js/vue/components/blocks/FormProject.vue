@@ -15,20 +15,20 @@
             <v-text-field
               label="Title*"
               required
-              v-model="title"
+              v-model="project.title"
             ></v-text-field>
           </v-col>
           <v-col cols="12">
             <v-textarea
               label="Description"
-              v-model="description"
+              v-model="project.description"
             ></v-textarea>
           </v-col>
           <v-col
             cols="12"
           >
             <v-combobox
-              v-model="client"
+              v-model="project.client"
               :items="clients"
               label="Client"
               item-text="title"
@@ -91,15 +91,28 @@
 import FileUploadWithPreview from "file-upload-with-preview"
 export default {
   name: "FormProject",
+  props: {
+    retainValues: {
+      type: Boolean,
+      default: false
+    },
+    project: {
+      type: Object,
+      default() {
+        return {
+          title: null,
+          description: null,
+          client: null,
+        }
+      }
+    }
+  },
   data() {
     return {
       submitting: false,
       searching: false,
       dialog: false,
-      title: null,
-      description: null,
       clients: [],
-      client: null,
       search: null
     }
   },
@@ -112,7 +125,6 @@ export default {
       }
     },
     search(nv) {
-      console.log(this.client)
       if (nv && nv.trim().length) {
         this.searching = true
         this.$store.dispatch("searchClient", nv).then(resp => {
@@ -129,21 +141,21 @@ export default {
       this.submitting = true
 
       const data = new FormData();
-      data.append("title", this.title)
+      data.append("title", this.project.title)
 
-      if (this.description) {
-        data.append("description", this.description)
+      if (this.project.description) {
+        data.append("description", this.project.description)
       }
 
-      if (this.search && this.search.trim().length && !this.client) {
-        this.client = this.search.trim()
+      if (this.search && this.search.trim().length && !this.project.client) {
+        this.project.client = this.search.trim()
       }
 
-      if (this.client) {
-        if (typeof this.client === "string") {
-          data.append("client", JSON.stringify({id: false, title: this.client}))
+      if (this.project.client) {
+        if (typeof this.project.client === "string") {
+          data.append("client", JSON.stringify({id: false, title: this.project.client}))
         } else {
-          data.append("client", JSON.stringify(this.client))
+          data.append("client", JSON.stringify(this.project.client))
         }
       }
 
@@ -153,6 +165,13 @@ export default {
 
       this.$store.dispatch("createProject", data).then(resp => {
         this.dialog = this.submitting = false
+
+        if (!this.retainValues) {
+          this.project.title = null
+          this.project.description = null
+          this.project.client = null
+        }
+
         this.$store.dispatch("setSiteData", resp.data)
       }).catch(error => {
         this.submitting = false

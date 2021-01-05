@@ -113,6 +113,7 @@ export default {
     this.$store.dispatch("setSiteData", window.appInitialData)
     this.mediawatcher = window.matchMedia('(max-width: 1024px)')
     this.mediawatcher.onchange = this.handleWindowResize
+    console.log(this.site_data)
   },
   mounted() {
     if (this.site_data) {

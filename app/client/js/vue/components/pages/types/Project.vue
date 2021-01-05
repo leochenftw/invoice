@@ -63,14 +63,16 @@
     </v-col>
   </v-row>
   <FormUserStory :story="CurrentStory" ref="storyform" />
+  <FormProject ref="form_project" />
 </section>
 </template>
 <script>
 import Workflow from "../../blocks/Workflow"
 import FormUserStory from "../../blocks/FormUserStory"
+import FormProject from "../../blocks/FormProject"
 export default {
   name: "Project",
-  components: { Workflow, FormUserStory },
+  components: { Workflow, FormUserStory, FormProject },
   data() {
     return {
       CurrentStory: null,
@@ -117,7 +119,7 @@ export default {
       this.ShowNewWorkflowForm = false
     },
     edit() {
-      console.log('edit');
+      this.$refs.form_project.dialog = true
     },
     delete() {
       console.log('delete');

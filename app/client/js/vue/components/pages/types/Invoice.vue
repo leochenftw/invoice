@@ -146,40 +146,47 @@ export default {
           }
         )
       } else {
-        if (!this.editmode) {
-          menu.push({
-            title: 'Edit',
-            method: () => {
-              this.editmode = true
+        if (this.site_data.paid) {
+          menu.push(
+            {
+              title: 'Export',
+              method: this.exportPDF
             }
-          })
-
-          menu.push({
-            title: 'Set Paid',
-            method: this.setInvoicePaid
-          })
-
-          menu.push({
-            title: 'Delete',
-            method: this.deleteInvoice
-          })
-
-          menu.push({
-            title: 'Export',
-            method: this.exportPDF
-          })
+          )
+        } else if (!this.editmode) {
+          menu.push(
+            {
+              title: 'Edit',
+              method: () => {
+                this.editmode = true
+              }
+            },
+            {
+              title: 'Set Paid',
+              method: this.setInvoicePaid
+            },
+            {
+              title: 'Delete',
+              method: this.deleteInvoice
+            },
+            {
+              title: 'Export',
+              method: this.exportPDF
+            }
+          )
         } else {
-          menu.push({
-            title: 'Save',
-            method: this.SaveInvoice
-          })
-
-          menu.push({
-            title: 'Canel',
-            method: () => {
-              this.editmode = false
+          menu.push(
+            {
+              title: 'Save',
+              method: this.SaveInvoice
+            },
+            {
+              title: 'Canel',
+              method: () => {
+                this.editmode = false
+              }
             }
-          })
+          )
         }
       }
 
