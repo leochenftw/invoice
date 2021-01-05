@@ -30,7 +30,7 @@ class SiteconfigExtension extends DataExtension
                 TextField::create('GSTRate', 'GST rate')->setDescription('e.g. 0.15'),
                 CurrencyField::create(
                     'HourlyRate',
-                    'Default hourly rate',
+                    'Default hourly rate'
                 ),
                 TextField::create('EntityTitle', 'Your entity name')
                     ->setDescription('e.g. John Doe if you are an individual, or Welly Digital if you are a business.'),
