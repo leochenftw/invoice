@@ -39,6 +39,30 @@
             ></v-combobox>
           </v-col>
         </v-row>
+        <div class="custom-file-container" data-upload-id="myUniqueUploadId">
+          <label>
+            Project background image
+            <a
+              href="javascript:void(0)"
+              class="custom-file-container__image-clear"
+              title="Clear Image"
+            >&times;</a>
+          </label>
+          <label class="custom-file-container__custom-file">
+              <input
+                type="file"
+                class="custom-file-container__custom-file__custom-file-input"
+                accept="image/x-png,image/gif,image/jpeg"
+                aria-label="Choose File"
+                ref="fileuploader"
+              />
+              <input type="hidden" name="MAX_FILE_SIZE" value="10485760" />
+              <span
+                class="custom-file-container__custom-file__custom-file-control"
+              ></span>
+          </label>
+          <div class="custom-file-container__image-preview"></div>
+      </div>
       </v-container>
       <small>*indicates required field</small>
     </v-card-text>
@@ -64,6 +88,7 @@
 </template>
 
 <script>
+import FileUploadWithPreview from "file-upload-with-preview"
 export default {
   name: "FormProject",
   data() {
@@ -79,6 +104,13 @@ export default {
     }
   },
   watch: {
+    dialog(nv) {
+      if (nv) {
+        this.$nextTick().then(() => {
+          const upload = new FileUploadWithPreview("myUniqueUploadId")
+        })
+      }
+    },
     search(nv) {
       console.log(this.client)
       if (nv && nv.trim().length) {
@@ -98,6 +130,7 @@ export default {
 
       const data = new FormData();
       data.append("title", this.title)
+
       if (this.description) {
         data.append("description", this.description)
       }
@@ -112,6 +145,10 @@ export default {
         } else {
           data.append("client", JSON.stringify(this.client))
         }
+      }
+
+      if (this.$refs.fileuploader.files.length) {
+        data.append("bgimage", this.$refs.fileuploader.files[0])
       }
 
       this.$store.dispatch("createProject", data).then(resp => {

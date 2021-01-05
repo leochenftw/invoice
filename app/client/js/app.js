@@ -8,6 +8,7 @@ import App from "./vue/App"
 import store from './vue/store'
 import router from "./vue/router"
 import common from "./vue/mixins/common"
+import "file-upload-with-preview/dist/file-upload-with-preview.min.css"
 
 Vue.prototype.$bus = new Vue({})
 Vue.prototype.$formatter = new Intl.NumberFormat('en-NZ', {

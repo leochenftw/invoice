@@ -66,8 +66,9 @@ class Project extends DataObject implements \JsonSerializable
             'id' => $this->ID,
             'title' => $this->Title,
             'client' => $this->Client()->exists() ? $this->Client()->Title : null,
+
             'slug' => $this->URLSegment,
-            'background' => $this->Background()->exists() ? $this->Background()->Fit(356, 200)->URL : '//placekitten.com/356/200',
+            'background' => $this->Background()->exists() ? $this->Background()->Fit(356, 200)->URL : '//loremflickr.com/356/200',
         ];
     }
 
@@ -78,7 +79,7 @@ class Project extends DataObject implements \JsonSerializable
             'title' => $this->Title,
             'client' => $this->Client()->exists() ? $this->Client()->Title : null,
             'slug' => $this->URLSegment,
-            'background' => $this->Background()->exists() ? $this->Background()->Fit(1920, 1080)->URL : '//placekitten.com/1920/1080',
+            'background' => $this->Background()->exists() ? $this->Background()->Fit(1920, 1080)->URL : '//loremflickr.com/1920/1080',
             'workflows' => $this->Workflows()->Data,
             'pagetype' => 'Project',
         ];

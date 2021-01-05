@@ -33,6 +33,18 @@ export default {
     })
   },
 
+  setInvoicePaid({ commit }, data) {
+    const endpoint = `/api/v/1/invoice`
+
+    return new Promise((resolve, reject) => {
+      axios.get(endpoint).then(resp => {
+        axios.post(`${endpoint}/paid`, data, {
+          headers: resp.data
+        }).then(resolve)
+      }).catch(reject)
+    })
+  },
+
   DeleteInvoice({ commit }, data) {
     const endpoint = `/api/v/1/invoice`
 

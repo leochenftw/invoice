@@ -286,6 +286,7 @@ class Invoice extends DataObject implements \JsonSerializable
             'paid' => $this->Paid,
             'due' => $this->Due,
             'hours' => $this->Hours,
+            'grand_total' => $this->Grandtotal,
         ];
     }
 

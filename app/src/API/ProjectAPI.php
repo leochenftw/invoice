@@ -8,6 +8,9 @@ use App\Web\Model\Project;
 use App\Web\Model\Workflow;
 use Leochenftw\Restful\RestfulController;
 use Leochenftw\Util;
+use SilverStripe\AssetAdmin\Controller\AssetAdmin;
+use SilverStripe\Assets\Folder;
+use SilverStripe\Assets\Image;
 use SilverStripe\Core\Convert;
 use SilverStripe\Security\SecurityToken;
 
@@ -75,6 +78,9 @@ class ProjectAPI extends RestfulController
         $request = $this->request;
         $title = Convert::raw2sql($request->postVar('title'));
         $desc = Convert::raw2sql($request->postVar('description'));
+
+        $bg = $request->postVar('bgimage');
+
         $client_data = $request->postVar('client');
 
         if (empty($this->project)) {
@@ -100,8 +106,29 @@ class ProjectAPI extends RestfulController
             $this->project->ClientID = $client->ID;
         }
 
+        if ($bg && '0' == $bg['error']) {
+            $bg = $this->handleBGUpload($bg['tmp_name'], $bg['name']);
+            $this->project->BackgroundID = $bg->ID;
+        }
+
         $this->project->write();
 
         return ProjectController::create()->Data;
+    }
+
+    private function handleBGUpload($image, $filename)
+    {
+        $fold = Folder::find_or_make('ProjectBackgrounds');
+        $img = Image::create();
+
+        $img->setFromLocalFile($image, $filename);
+
+        $img->ParentID = $fold->ID;
+        $img->write();
+        $img->publishSingle();
+
+        AssetAdmin::create()->generateThumbnails($img);
+
+        return $img;
     }
 }

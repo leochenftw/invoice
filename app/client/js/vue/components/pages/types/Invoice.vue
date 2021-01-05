@@ -102,6 +102,7 @@
           />
         </v-col>
       </v-row>
+      <span v-if="site_data.paid" class="stamp is-approved">PAID</span>
     </v-form>
     <v-menu v-model="showMenu" :position-x="x" :position-y="y" absolute offset-y>
       <v-list>
@@ -154,6 +155,11 @@ export default {
           })
 
           menu.push({
+            title: 'Set Paid',
+            method: this.setInvoicePaid
+          })
+
+          menu.push({
             title: 'Delete',
             method: this.deleteInvoice
           })
@@ -203,6 +209,17 @@ export default {
     this.editmode = this.site_data.id ? false : true
   },
   methods: {
+    setInvoicePaid(item) {
+      if (!confirm("Has this invoice been paid?")) {
+        return false
+      }
+
+      const data = new FormData()
+      data.append("data", JSON.stringify({ id: this.site_data.id }))
+      this.$store.dispatch("setInvoicePaid", data).then(resp => {
+        item.paid = resp.data.paid
+      })
+    },
     deleteInvoice(e) {
       if (!confirm("Sure?")) {
         return false

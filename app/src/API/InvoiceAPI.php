@@ -31,11 +31,7 @@ class InvoiceAPI extends RestfulController
             $action = $request->param('action') ?: 'save';
             $data = json_decode($request->postVar('data'));
 
-            if ('delete' == $action) {
-                if (empty($data->id)) {
-                    return $this->httpError(400, 'Missing invoice id');
-                }
-            } else {
+            if ('save' == $action) {
                 if (empty($data->client) || empty($data->client->id)) {
                     return $this->httpError(400, 'Missing client');
                 }
@@ -43,12 +39,34 @@ class InvoiceAPI extends RestfulController
                 if (empty($data->logs) || empty($data->logs->list)) {
                     return $this->httpError(400, 'Nothing to bill');
                 }
+            } else {
+                if (empty($data->id)) {
+                    return $this->httpError(400, 'Missing invoice id');
+                }
             }
 
             return $this->{$action}($data);
         }
 
         return $this->httpError(400, 'Missing CSRF token!');
+    }
+
+    private function paid(&$data)
+    {
+        if (empty($data->id)) {
+            return $this->httpError(400, 'Missing invoice ID');
+        }
+
+        $invoice = Invoice::get()->byID($data->id);
+
+        if (empty($invoice)) {
+            return $this->httpError(404, 'Invoice not found');
+        }
+
+        $invoice->Paid = true;
+        $invoice->write();
+
+        return $invoice;
     }
 
     private function delete(&$data)

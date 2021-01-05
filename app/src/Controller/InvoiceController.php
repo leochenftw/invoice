@@ -44,7 +44,9 @@ class InvoiceController extends PageController
                 // Write some HTML code:
                 $mpdf->WriteHTML($str);
 
-                return $mpdf->Output();
+                $client = $invoice->Client()->exists() ? (' - ' . $invoice->Client()->Title) : '';
+
+                return $mpdf->Output("Invoice#{$invoice->Title}{$client}.pdf", 'D');
             }
         }
 
@@ -104,6 +106,12 @@ class InvoiceController extends PageController
                         'align' => 'center',
                         'sortable' => true,
                         'value' => 'hours',
+                    ],
+                    [
+                        'text' => 'Amount',
+                        'align' => 'right',
+                        'sortable' => true,
+                        'value' => 'grand_total',
                     ],
                     [
                         'text' => 'Due',

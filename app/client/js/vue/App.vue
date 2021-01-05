@@ -2,8 +2,9 @@
 <v-app :class="{'has-bg': site_data ? site_data.background : false}">
   <v-navigation-drawer
     app
-    absolute
-    permanent
+    :absolute="mediawatcher.matches"
+    :temporary="mediawatcher.matches"
+    :permanent="!mediawatcher.matches"
     v-model="drawer"
   >
     <v-list-item>
@@ -48,7 +49,7 @@
   <v-app-bar
     app
   >
-    <v-app-bar-nav-icon @click.prevent="drawer = !drawer"></v-app-bar-nav-icon>
+    <v-app-bar-nav-icon v-if="mediawatcher.matches" @click.prevent="drawer = !drawer"></v-app-bar-nav-icon>
     <h1 v-if="site_data" class="v-toolbar__title">{{ site_data.title }}</h1>
     <v-spacer></v-spacer>
     <v-menu
@@ -90,6 +91,7 @@ export default {
   name: "App",
   data () {
     return {
+      mediawatcher: null,
       drawer: false,
       items: [
         { title: 'Dashboard', icon: 'mdi-view-dashboard', route: "/" },
@@ -109,11 +111,21 @@ export default {
   },
   created() {
     this.$store.dispatch("setSiteData", window.appInitialData)
-    console.log(this.site_data)
+    this.mediawatcher = window.matchMedia('(max-width: 1024px)')
+    this.mediawatcher.onchange = this.handleWindowResize
   },
   mounted() {
     if (this.site_data) {
       document.title = this.site_data.title
+    }
+
+    this.$nextTick().then(() => {
+      window.dispatchEvent(new Event("resize"))
+    })
+  },
+  methods: {
+    handleWindowResize() {
+      this.drawer = !this.mediawatcher.matches
     }
   }
 }

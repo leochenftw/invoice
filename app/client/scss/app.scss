@@ -40,7 +40,37 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 
+    .stamp {
+      transform: rotate(12deg);
+      color: #555;
+      font-size: 3rem;
+      font-weight: 700;
+      border: 0.25rem solid #555;
+      display: inline-block;
+      padding: 0.25rem 1rem;
+      text-transform: uppercase;
+      border-radius: 1rem;
+      font-family: 'Courier';
+      -webkit-mask-image: url('/_resources/app/client/images/grunge.png');
+      -webkit-mask-size: 944px 604px;
+      mix-blend-mode: multiply;
+      &.is-approved {
+        color: #0A9928;
+        border: 0.5rem solid #0A9928;
+        -webkit-mask-position: 13rem 6rem;
+        transform: rotate(-14deg);
+        border-radius: 0;
+      }
+    }
+
     .invoice-form {
+      position: relative;
+      .stamp {
+        position: absolute;
+        bottom: 2rem;
+        transform: none;
+        right: 1rem;
+      }
       .tax-no {
         margin-bottom: 0;
         font-size: 14px;

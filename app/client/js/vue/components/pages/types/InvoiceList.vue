@@ -7,6 +7,9 @@
     :sort-desc="[true]"
   >
     <template v-slot:item.actions="{ item }">
+      <v-btn v-if="!item.paid" left small icon @click.prevent="setInvoicePaid(item)">
+        <v-icon>mdi-check-all</v-icon>
+      </v-btn>
       <v-btn small icon :to="`/invoices/${item.id}`">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
@@ -41,6 +44,17 @@ export default {
     this.$store.state.page_menu = this.Menu
   },
   methods: {
+    setInvoicePaid(item) {
+      if (!confirm("Has this invoice been paid?")) {
+        return false
+      }
+
+      const data = new FormData()
+      data.append("data", JSON.stringify({ id: item.id }))
+      this.$store.dispatch("setInvoicePaid", data).then(resp => {
+        item.paid = resp.data.paid
+      })
+    },
     CalloutInvoiceform() {
       this.$router.push('/invoices/new')
     }
