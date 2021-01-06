@@ -25,7 +25,24 @@ class ProjectAPI extends RestfulController
     private static $allowed_actions = [
         'get' => true,
         'post' => true,
+        'delete' => true,
     ];
+
+    public function delete($request)
+    {
+        if (Util::check_csrf($request)) {
+            $id = Convert::raw2sql($request->param('id'));
+            if (!empty($id)) {
+                if ($this->project = Project::get()->byID($id)) {
+                    return $this->project->delete();
+                }
+
+                return $this->httpError(404, 'The project does not exist!');
+            }
+        }
+
+        return $this->httpError(400, 'Missing CSRF token!');
+    }
 
     public function get($request)
     {

@@ -122,7 +122,13 @@ export default {
       this.$refs.form_project.dialog = true
     },
     delete() {
-      console.log('delete');
+      if (!confirm("Sure?")) {
+        return false
+      }
+
+      this.$store.dispatch("deleteProject", this.site_data.id).then(() => {
+          this.$router.replace('/projects')
+        })
     },
     CreateWorkflow() {
       const data = new FormData()

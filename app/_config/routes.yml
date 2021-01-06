@@ -14,6 +14,7 @@ SilverStripe\Control\Director:
     'api/v/1/contact' : 'App\Web\API\ContactAPI'
     'api/v/1/member/$Action' : 'App\Web\API\MemberAPI'
     'password-recovery' : 'App\Web\Controller\PasswordRecoveryController'
+    'api/v/1/client/$action/$id' : 'App\Web\API\ClientAPI'
     'api/v/1/project/$id/$action' : 'App\Web\API\ProjectAPI'
     'api/v/1/workflow/$id/$action' : 'App\Web\API\WorkflowAPI'
     'api/v/1/invoice/$action' : 'App\Web\API\InvoiceAPI'

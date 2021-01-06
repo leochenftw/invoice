@@ -15,12 +15,14 @@
       </v-btn>
     </template>
   </v-data-table>
+  <FormClient ref="form_client" />
 </section>
 </template>
 <script>
+import FormClient from "../../blocks/FormClient"
 export default {
   name: "ClientList",
-  components: {},
+  components: { FormClient },
   data () {
     return {}
   },
@@ -39,7 +41,7 @@ export default {
   },
   methods: {
     CalloutClientform() {
-
+      this.$refs.form_client.dialog = true
     }
   }
 }

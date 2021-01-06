@@ -21,6 +21,18 @@ export default {
     commit("SET_SITE_DATA", data)
   },
 
+  createClient({ commit }, data) {
+    const endpoint = '/api/v/1/client'
+
+    return new Promise((resolve, reject) => {
+      axios.get(endpoint).then(resp => {
+        axios.post(`${endpoint}/createClient`, data, {
+          headers: resp.data
+        }).then(resolve).catch(reject)
+      }).catch(reject)
+    })
+  },
+
   createProject({ commit }, data) {
     const endpoint = '/api/v/1/project'
 
@@ -28,7 +40,19 @@ export default {
       axios.get(endpoint).then(resp => {
         axios.post(endpoint, data, {
           headers: resp.data
-        }).then(resolve)
+        }).then(resolve).catch(reject)
+      }).catch(reject)
+    })
+  },
+
+  deleteProject({ commit }, id) {
+    const endpoint = '/api/v/1/project'
+
+    return new Promise((resolve, reject) => {
+      axios.get(endpoint).then(resp => {
+        axios.delete(`${endpoint}/${id}`, {
+          headers: resp.data
+        }).then(resolve).catch(reject)
       }).catch(reject)
     })
   },
@@ -40,7 +64,7 @@ export default {
       axios.get(endpoint).then(resp => {
         axios.post(`${endpoint}/paid`, data, {
           headers: resp.data
-        }).then(resolve)
+        }).then(resolve).catch(reject)
       }).catch(reject)
     })
   },
@@ -52,7 +76,7 @@ export default {
       axios.get(endpoint).then(resp => {
         axios.post(`${endpoint}/delete`, data, {
           headers: resp.data
-        }).then(resolve)
+        }).then(resolve).catch(reject)
       }).catch(reject)
     })
   },
@@ -64,7 +88,7 @@ export default {
       axios.get(endpoint).then(resp => {
         axios.post(`${endpoint}/save`, data, {
           headers: resp.data
-        }).then(resolve)
+        }).then(resolve).catch(reject)
       }).catch(reject)
     })
   },
@@ -76,7 +100,7 @@ export default {
       axios.get(endpoint).then(resp => {
         axios.post(endpoint, data, {
           headers: resp.data
-        }).then(resolve)
+        }).then(resolve).catch(reject)
       }).catch(reject)
     })
   },
@@ -95,7 +119,7 @@ export default {
       axios.get(endpoint).then(resp => {
         axios.post(`${endpoint}/addHours`, data.data, {
           headers: resp.data
-        }).then(resolve)
+        }).then(resolve).catch(reject)
       }).catch(reject)
     })
   },
@@ -106,7 +130,7 @@ export default {
       axios.get(endpoint).then(resp => {
         axios.post(`${endpoint}/update`, data.data, {
           headers: resp.data
-        }).then(resolve)
+        }).then(resolve).catch(reject)
       }).catch(reject)
     })
   },
@@ -118,7 +142,7 @@ export default {
       axios.get(endpoint).then(resp => {
         axios.post(endpoint, data.list, {
           headers: resp.data
-        }).then(resolve)
+        }).then(resolve).catch(reject)
       }).catch(reject)
     })
   },
@@ -130,7 +154,7 @@ export default {
       axios.get(endpoint).then(resp => {
         axios.post(endpoint, data, {
           headers: resp.data
-        }).then(resolve)
+        }).then(resolve).catch(reject)
       }).catch(reject)
     })
   },

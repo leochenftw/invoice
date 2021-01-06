@@ -17,9 +17,12 @@ class ClientController extends PageController
         $data = Page::create()->Data;
 
         if (!empty($slug)) {
-            return [
-                'slug' => $slug,
-            ];
+            if ($client = Client::get()->filter(['URLSegment' => $slug])->first()) {
+                $data['title'] = $client->Title;
+                $data['pagetype'] = 'Client';
+
+                return array_merge($data, $client->jsonSerialize());
+            }
         }
 
         $page = Convert::raw2sql($this->request->getVar('page'));
