@@ -21,6 +21,7 @@
           <template v-else>
             <v-text-field v-model="site_data.tax_no" label="IRD/GST No." hide-details></v-text-field>
             <v-checkbox v-model="site_data.gst_registered" label="is GST registered"></v-checkbox>
+            <v-text-field v-model="site_data.hourly_rate" label="Hourly rate" hide-details></v-text-field>
           </template>
         </v-col>
       </v-row>
@@ -55,7 +56,7 @@
       <v-divider></v-divider>
       <v-data-table
         :headers="site_data.logs.headers"
-        :items="site_data.logs.list"
+        :items="Logs"
         hide-default-footer
         disable-pagination
         @contextmenu:row="rightClickHandler"
@@ -135,6 +136,18 @@ export default {
     }
   },
   computed: {
+    Logs() {
+      if (this.site_data && this.site_data.logs.list.length) {
+        const hourly_rate = this.site_data.hourly_rate
+        return this.site_data.logs.list.map(o => {
+          o.hourly_rate = hourly_rate
+          o.sum = hourly_rate * o.hours
+          return o
+        })
+      }
+
+      return [];
+    },
     Menu() {
       const menu = []
 

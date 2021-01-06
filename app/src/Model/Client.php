@@ -2,6 +2,7 @@
 
 namespace App\Web\Model;
 
+use SilverStripe\Dev\Debug;
 use SilverStripe\CMS\Forms\SiteTreeURLSegmentField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\Parsers\URLSegmentFilter;
@@ -88,6 +89,10 @@ class Client extends DataObject implements \JsonSerializable
                 return $log->ID;
             }, $project->Worklogs()->filter(['Billed' => false])->toArray());
         }, $this->Projects()->toArray());
+
+        if (empty($list)) {
+          return $list;
+        }
 
         return array_merge(...array_values($list));
     }
