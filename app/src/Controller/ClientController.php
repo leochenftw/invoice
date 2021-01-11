@@ -14,6 +14,7 @@ class ClientController extends PageController
     public function getData()
     {
         $slug = Convert::raw2sql($this->request->param('slug'));
+        $action = Convert::raw2sql($this->request->param('action'));
         $data = Page::create()->Data;
 
         if (!empty($slug)) {
@@ -21,7 +22,11 @@ class ClientController extends PageController
                 $data['title'] = $client->Title;
                 $data['pagetype'] = 'Client';
 
-                return array_merge($data, $client->jsonSerialize());
+                if (!empty($action) && $this->hasMethod($action)) {
+                    return $this->{$action}($client);
+                }
+
+                return array_merge($data, $client->jsonSerialize(true));
             }
         }
 
@@ -76,5 +81,10 @@ class ClientController extends PageController
                 }, Client::get()->toArray()),
             ],
         ]);
+    }
+
+    public function activities(&$client)
+    {
+        return $client->Activities;
     }
 }

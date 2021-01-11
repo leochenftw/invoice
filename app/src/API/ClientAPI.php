@@ -60,7 +60,20 @@ class ClientAPI extends RestfulController
         return $this->httpError(400, 'Missing CSRF token!');
     }
 
-    private function createClient(&$request)
+    private function updateClient(&$request)
+    {
+        if ($id = $request->param('id')) {
+            if ($client = Client::get()->byID($id)) {
+                return $this->createClient($request, $client);
+            }
+
+            return $this->httpError(404, 'No such client');
+        }
+
+        return $this->httpError(400, 'Missing id!');
+    }
+
+    private function createClient(&$request, $client = null)
     {
         $title = Convert::raw2sql($request->postVar('title'));
 
@@ -69,33 +82,24 @@ class ClientAPI extends RestfulController
         }
 
         $code = Convert::raw2sql($request->postVar('code'));
+
+        if (empty($code)) {
+            return $this->httpError(400, 'Missing client code');
+        }
+
         $entity = Convert::raw2sql($request->postVar('entity'));
-        $address = Convert::raw2sql($request->postVar('address'));
+        $address = strip_tags($request->postVar('address'));
         $email = Convert::raw2sql($request->postVar('email'));
         $phone = Convert::raw2sql($request->postVar('phone'));
 
-        $client = Client::create();
+        $client = $client ?: Client::create();
         $client->Title = $title;
+        $client->Code = $code;
 
-        if (!empty($code)) {
-            $client->Code = $code;
-        }
-
-        if (!empty($address)) {
-            $client->Address = $address;
-        }
-
-        if (!empty($email)) {
-            $client->Email = $email;
-        }
-
-        if (!empty($entity)) {
-            $client->BusinessEntity = $entity;
-        }
-
-        if (!empty($phone)) {
-            $client->Phone = $phone;
-        }
+        $client->Address = !empty($address) ? $address : null;
+        $client->Email = !empty($email) ? $email : null;
+        $client->BusinessEntity = !empty($entity) ? $entity : null;
+        $client->Phone = !empty($phone) ? $phone : null;
 
         $client->write();
 

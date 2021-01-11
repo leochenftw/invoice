@@ -33,6 +33,27 @@ export default {
     })
   },
 
+  updateClient({ commit }, data) {
+    const endpoint = '/api/v/1/client'
+
+    return new Promise((resolve, reject) => {
+      axios.get(endpoint).then(resp => {
+        const id = data.get("id")
+        axios.post(`${endpoint}/updateClient/${id}`, data, {
+          headers: resp.data
+        }).then(resolve).catch(reject)
+      }).catch(reject)
+    })
+  },
+
+  getClientActivities({ commit }, slug) {
+    const endpoint = `/clients/${slug}/activities`
+
+    return new Promise((resolve, reject) => {
+      axios.get(endpoint).then(resolve).catch(reject)
+    })
+  },
+
   createProject({ commit }, data) {
     const endpoint = '/api/v/1/project'
 

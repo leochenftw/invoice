@@ -2,7 +2,6 @@
 
 namespace App\Web\Model;
 
-use SilverStripe\Dev\Debug;
 use SilverStripe\CMS\Forms\SiteTreeURLSegmentField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\Parsers\URLSegmentFilter;
@@ -59,13 +58,13 @@ class Client extends DataObject implements \JsonSerializable
         $this->URLSegment = URLSegmentFilter::singleton()->filter($this->Title);
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize($raw = false)
     {
         return array_merge(
             $this->Data,
             [
                 'entity' => !empty($this->BusinessEntity) ? $this->BusinessEntity : $this->Title,
-                'address' => nl2br($this->Address),
+                'address' => $raw ? $this->Address : nl2br($this->Address),
                 'email' => $this->Email,
                 'phone' => $this->Phone,
             ]
@@ -90,10 +89,6 @@ class Client extends DataObject implements \JsonSerializable
             }, $project->Worklogs()->filter(['Billed' => false])->toArray());
         }, $this->Projects()->toArray());
 
-        if (empty($list)) {
-          return $list;
-        }
-
         return array_merge(...array_values($list));
     }
 
@@ -111,6 +106,19 @@ class Client extends DataObject implements \JsonSerializable
                 'outstanding_invoices' => $this->Invoices()->filter(['Paid' => false])->count(),
             ]
         );
+    }
+
+    public function getActivities()
+    {
+        return [
+            'projects' => [
+                'num_project' => $this->Projects()->count(),
+            ],
+            'invoices' => [
+                'num_invoices' => $this->Invoices()->count(),
+            ],
+            'hours' => [],
+        ];
     }
 
     private function makeSlug()
