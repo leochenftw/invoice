@@ -50,27 +50,59 @@
         </v-col>
         <v-col>
           <h2 class="text-h4">Client activities</h2>
-          <v-row>
-            <v-col cols="auto">
-              <v-subheader class="pl-0 pr-0">Projects to day</v-subheader>
-              <p class="text-h2">12</p>
-            </v-col>
-            <v-col>
-              <v-subheader class="pl-0 pr-0">Projects to day</v-subheader>
-              <p class="text-h2">12</p>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" sm="4">
-              <v-subheader class="pl-0 pr-0">Hours to day</v-subheader>
-              <p class="text-h2">12</p>
-            </v-col>
-            <v-col cols="12" sm="4">
-              <v-subheader class="pl-0 pr-0">Invoices to day</v-subheader>
-              <p class="text-h2">12</p>
+          <v-row v-if="!activities">
+            <v-col cols="12" >
+              <v-progress-circular
+                :size="70"
+                color="primary"
+                indeterminate
+              ></v-progress-circular>
             </v-col>
           </v-row>
-          <v-divider></v-divider>
+          <template v-else>
+            <v-row>
+              <v-col cols="auto">
+                <v-subheader class="pl-0 pr-0">Projects to day</v-subheader>
+                <p class="text-h2 text-center">{{ activities.projects.count }}</p>
+              </v-col>
+              <v-col cols="auto"><v-divider vertical></v-divider></v-col>
+              <v-col>
+                <v-data-table
+                  :headers="activities.projects.headers"
+                  :items="activities.projects.list"
+                >
+                  <template v-slot:item.actions="props">
+                    <v-btn small icon :to="`/projects/${props.item.slug}`">
+                      <v-icon>mdi-magnify</v-icon>
+                    </v-btn>
+                  </template>
+                </v-data-table>
+              </v-col>
+            </v-row>
+            <v-divider></v-divider>
+            <v-row>
+              <v-col cols="auto">
+                <v-subheader class="pl-0 pr-0">Invoices to day</v-subheader>
+                <p class="text-h2 text-center">{{ activities.invoices.count }}</p>
+              </v-col>
+              <v-col cols="auto"><v-divider vertical></v-divider></v-col>
+              <v-col>
+                <v-data-table
+                  :headers="activities.invoices.headers"
+                  :items="activities.invoices.list"
+                >
+                  <template v-slot:item.actions="props">
+                    <v-btn small icon :to="`/invoices/${props.item.id}`">
+                      <v-icon>mdi-magnify</v-icon>
+                    </v-btn>
+                  </template>
+                  <template v-slot:item.paid="{ item }">
+                    {{ item.paid ? 'Yes' : 'No' }}
+                  </template>
+                </v-data-table>
+              </v-col>
+            </v-row>
+          </template>
         </v-col>
       </v-row>
     </v-form>
@@ -85,6 +117,7 @@ export default {
   data() {
     return {
       saving: false,
+      activities: null,
     }
   },
   computed: {
@@ -96,7 +129,9 @@ export default {
     this.$store.state.page_menu = this.Menu
   },
   mounted() {
-    this.$store.dispatch("getClientActivities", this.site_data.slug)
+    this.$store.dispatch("getClientActivities", this.site_data.slug).then(resp => {
+      this.activities = resp.data
+    })
   },
   methods: {
     submit() {

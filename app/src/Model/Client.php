@@ -112,10 +112,73 @@ class Client extends DataObject implements \JsonSerializable
     {
         return [
             'projects' => [
-                'num_project' => $this->Projects()->count(),
+                'count' => $this->Projects()->count(),
+                'headers' => [
+                    [
+                        'text' => 'Projects',
+                        'align' => 'left',
+                        'sortable' => false,
+                        'value' => 'title',
+                    ],
+                    [
+                        'text' => 'Hours',
+                        'align' => 'center',
+                        'sortable' => false,
+                        'value' => 'hours',
+                    ],
+                    [
+                        'text' => '',
+                        'align' => 'center',
+                        'sortable' => false,
+                        'value' => 'actions',
+                    ],
+                ],
+                'list' => array_map(function ($project) {
+                    return array_merge(
+                        $project->Data,
+                        [
+                            'hours' => $project->Hours,
+                        ]
+                    );
+                }, $this->Projects()->toArray()),
             ],
             'invoices' => [
-                'num_invoices' => $this->Invoices()->count(),
+                'count' => $this->Invoices()->count(),
+                'headers' => [
+                    [
+                        'text' => 'Invoice No.',
+                        'align' => 'start',
+                        'sortable' => true,
+                        'value' => 'title',
+                    ],
+                    [
+                        'text' => 'Amount',
+                        'align' => 'right',
+                        'sortable' => true,
+                        'value' => 'grand_total',
+                    ],
+                    [
+                        'text' => 'Due',
+                        'align' => 'center',
+                        'sortable' => true,
+                        'value' => 'due',
+                    ],
+                    [
+                        'text' => 'Paid',
+                        'align' => 'center',
+                        'sortable' => false,
+                        'value' => 'paid',
+                    ],
+                    [
+                        'text' => '',
+                        'align' => 'center',
+                        'sortable' => false,
+                        'value' => 'actions',
+                    ],
+                ],
+                'list' => array_map(function ($item) {
+                    return $item->Data;
+                }, $this->Invoices()->toArray()),
             ],
             'hours' => [],
         ];
