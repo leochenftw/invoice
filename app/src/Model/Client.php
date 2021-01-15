@@ -128,7 +128,7 @@ class Client extends DataObject implements \JsonSerializable
                     ],
                     [
                         'text' => '',
-                        'align' => 'center',
+                        'align' => 'right',
                         'sortable' => false,
                         'value' => 'actions',
                     ],
@@ -171,7 +171,7 @@ class Client extends DataObject implements \JsonSerializable
                     ],
                     [
                         'text' => '',
-                        'align' => 'center',
+                        'align' => 'right',
                         'sortable' => false,
                         'value' => 'actions',
                     ],

@@ -64,6 +64,7 @@
               <v-col cols="auto">
                 <v-subheader class="pl-0 pr-0">Projects to day</v-subheader>
                 <p class="text-h2 text-center">{{ activities.projects.count }}</p>
+                <p class="text-center"><v-btn text @click.prevent="CalloutProjectForm">New...</v-btn></p>
               </v-col>
               <v-col cols="auto"><v-divider vertical></v-divider></v-col>
               <v-col>
@@ -84,6 +85,7 @@
               <v-col cols="auto">
                 <v-subheader class="pl-0 pr-0">Invoices to day</v-subheader>
                 <p class="text-h2 text-center">{{ activities.invoices.count }}</p>
+                <p class="text-center"><v-btn text :to="`/invoices/new?client=${site_data.id}`">New...</v-btn></p>
               </v-col>
               <v-col cols="auto"><v-divider vertical></v-divider></v-col>
               <v-col>
@@ -107,15 +109,17 @@
       </v-row>
     </v-form>
   </v-container>
+  <FormProject ref="form_project" />
 </section>
 </template>
 <script>
-
+import FormProject from "../../blocks/FormProject"
 export default {
   name: "Client",
-  components: { },
+  components: { FormProject },
   data() {
     return {
+      dialog: false,
       saving: false,
       activities: null,
     }
@@ -134,6 +138,9 @@ export default {
     })
   },
   methods: {
+    CalloutProjectForm() {
+      this.$refs.form_project.dialog = true
+    },
     submit() {
       if (this.saving) {
         return false
