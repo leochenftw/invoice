@@ -147,6 +147,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .row.root {
+  margin-top: 0;
+  margin-bottom: 0;
   min-height: calc(100vh - 64px);
   overflow: hidden;
   overflow-x: auto;

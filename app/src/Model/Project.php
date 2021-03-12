@@ -57,7 +57,8 @@ class Project extends DataObject implements \JsonSerializable
     public function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        $this->URLSegment = URLSegmentFilter::singleton()->filter($this->Title);
+        $prefix = $this->Client()->exists() ? $this->Client()->URLSegment : $this->ID;
+        $this->URLSegment = "{$prefix}-" . URLSegmentFilter::singleton()->filter($this->Title);
     }
 
     public function getData()
