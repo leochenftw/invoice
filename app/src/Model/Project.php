@@ -73,6 +73,13 @@ class Project extends DataObject implements \JsonSerializable
         ];
     }
 
+    public function getHours()
+    {
+        return array_sum(array_map(function ($log) {
+            return $log->Hours;
+        }, $this->Worklogs()->toArray()));
+    }
+
     public function jsonSerialize()
     {
         return [

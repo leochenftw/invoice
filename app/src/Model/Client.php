@@ -2,7 +2,6 @@
 
 namespace App\Web\Model;
 
-use SilverStripe\Dev\Debug;
 use SilverStripe\CMS\Forms\SiteTreeURLSegmentField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\View\Parsers\URLSegmentFilter;
@@ -59,13 +58,13 @@ class Client extends DataObject implements \JsonSerializable
         $this->URLSegment = URLSegmentFilter::singleton()->filter($this->Title);
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize($raw = false)
     {
         return array_merge(
             $this->Data,
             [
                 'entity' => !empty($this->BusinessEntity) ? $this->BusinessEntity : $this->Title,
-                'address' => nl2br($this->Address),
+                'address' => $raw ? $this->Address : nl2br($this->Address),
                 'email' => $this->Email,
                 'phone' => $this->Phone,
             ]
@@ -90,10 +89,6 @@ class Client extends DataObject implements \JsonSerializable
             }, $project->Worklogs()->filter(['Billed' => false])->toArray());
         }, $this->Projects()->toArray());
 
-        if (empty($list)) {
-          return $list;
-        }
-
         return array_merge(...array_values($list));
     }
 
@@ -111,6 +106,82 @@ class Client extends DataObject implements \JsonSerializable
                 'outstanding_invoices' => $this->Invoices()->filter(['Paid' => false])->count(),
             ]
         );
+    }
+
+    public function getActivities()
+    {
+        return [
+            'projects' => [
+                'count' => $this->Projects()->count(),
+                'headers' => [
+                    [
+                        'text' => 'Projects',
+                        'align' => 'left',
+                        'sortable' => false,
+                        'value' => 'title',
+                    ],
+                    [
+                        'text' => 'Hours',
+                        'align' => 'center',
+                        'sortable' => false,
+                        'value' => 'hours',
+                    ],
+                    [
+                        'text' => '',
+                        'align' => 'right',
+                        'sortable' => false,
+                        'value' => 'actions',
+                    ],
+                ],
+                'list' => array_map(function ($project) {
+                    return array_merge(
+                        $project->Data,
+                        [
+                            'hours' => $project->Hours,
+                        ]
+                    );
+                }, $this->Projects()->toArray()),
+            ],
+            'invoices' => [
+                'count' => $this->Invoices()->count(),
+                'headers' => [
+                    [
+                        'text' => 'Invoice No.',
+                        'align' => 'start',
+                        'sortable' => true,
+                        'value' => 'title',
+                    ],
+                    [
+                        'text' => 'Amount',
+                        'align' => 'right',
+                        'sortable' => true,
+                        'value' => 'grand_total',
+                    ],
+                    [
+                        'text' => 'Due',
+                        'align' => 'center',
+                        'sortable' => true,
+                        'value' => 'due',
+                    ],
+                    [
+                        'text' => 'Paid',
+                        'align' => 'center',
+                        'sortable' => false,
+                        'value' => 'paid',
+                    ],
+                    [
+                        'text' => '',
+                        'align' => 'right',
+                        'sortable' => false,
+                        'value' => 'actions',
+                    ],
+                ],
+                'list' => array_map(function ($item) {
+                    return $item->Data;
+                }, $this->Invoices()->toArray()),
+            ],
+            'hours' => [],
+        ];
     }
 
     private function makeSlug()
