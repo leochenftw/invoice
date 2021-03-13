@@ -106,8 +106,8 @@ class UserStoryAPI extends RestfulController
 
         $log = Worklog::create();
         $now = new \DateTime();
-        $log->End = $now->format('Y-m-d H:i:s');
-        $log->Start = $now->modify("-{$seconds} seconds")->format('Y-m-d H:i:s');
+        $log->End = $now->format('Y-m-d H:i') . ':00';
+        $log->Start = $now->modify("-{$seconds} seconds")->format('Y-m-d H:i') . ':00';
         $log->UserStoryID = $this->story->ID;
         $log->write();
 

@@ -28,7 +28,7 @@
     "dotenv": "^8.2.0",
     "eslint": "^7.8.1",
     "eslint-loader": "^4.0.2",
-    "eslint-plugin-vue": "^6.2.2",
+    "eslint-plugin-vue": "^7",
     "file-upload-with-preview": "^4.1.0",
     "lodash": "^4.17.20",
     "mini-css-extract-plugin": "^0.11.0",

@@ -93,6 +93,7 @@
               v-for="log in fullstory.logs"
               :key="log.id"
               :log="log"
+              @worklog-updated="onWorklogUpdated"
             />
           </div>
         </v-col>
@@ -213,6 +214,13 @@ export default {
       }).catch(error => {
         this.submitting = false
       })
+    },
+    onWorklogUpdated(data) {
+      const log = this.fullstory.logs.find(o => o.id == data.id)
+      log.end = data.end
+      log.hours = data.hours
+      log.start = data.start
+      log.title = data.title
     }
   }
 }

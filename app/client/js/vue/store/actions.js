@@ -145,6 +145,18 @@ export default {
     })
   },
 
+  updateHours({ commit }, data) {
+    const endpoint = `/api/v/1/worklog/${data.id}`
+
+    return new Promise((resolve, reject) => {
+      axios.get(endpoint).then(resp => {
+        axios.post(`${endpoint}/updateHours`, data.data, {
+          headers: resp.data
+        }).then(resolve).catch(reject)
+      }).catch(reject)
+    })
+  },
+
   updateUserStory({ commit }, data) {
     const endpoint = `api/v/1/userstory/${data.id}`
     return new Promise((resolve, reject) => {

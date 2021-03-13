@@ -23,3 +23,4 @@ SilverStripe\Control\Director:
     'clients/$slug/$action': 'App\Web\Controller\ClientController'
     'invoices/$id/$action': 'App\Web\Controller\InvoiceController'
     'api/v/1/search-clients/$search': 'App\Web\API\ClientSearchAPI'
+    'api/v/1/worklog/$id/$action': 'App\Web\API\WorklogAPI'
