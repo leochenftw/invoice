@@ -263,7 +263,7 @@ class Invoice extends DataObject implements \JsonSerializable
                 $logs = GroupedList::create(Worklog::get()->filter(['ID' => $log_ids]))->GroupedBy('ProjectTitle')->column('ProjectTitle');
 
                 if (count($logs) > 1) {
-                    $last = array_pop($xlogs);
+                    $last = array_pop($logs);
 
                     return implode(', ', $logs) . ' and ' . $last;
                 }
