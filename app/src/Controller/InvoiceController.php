@@ -49,7 +49,7 @@ class InvoiceController extends PageController
                 HtmlPruner::fromDomDocument($domDocument)->removeElementsWithDisplayNone();
                 $str = CssToAttributeConverter::fromDomDocument($domDocument)
                   ->convertCssToVisualAttributes()->render();
-// return $str;
+
                 $mpdf = new Mpdf([
                     'mode' => 'utf-8',
                     'CSSselectMedia' => 'screen',
@@ -62,7 +62,7 @@ class InvoiceController extends PageController
 
                 $client = $invoice->Client()->exists() ? (' - ' . $invoice->Client()->Title) : '';
 
-                return $mpdf->Output("Invoice#{$invoice->Title}{$client}.pdf", 'I');
+                return $mpdf->Output("Invoice#{$invoice->Title}{$client}.pdf", 'D');
             }
         }
 
