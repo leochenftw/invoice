@@ -122,7 +122,19 @@ export default {
       }
     }
   },
+  created() {
+    this.$bus.$on("updateCard", this.updateCard)
+  },
+  beforeDestroy() {
+    this.$bus.$off("updateCard", this.updateCard)
+  },
   methods: {
+    updateCard(data) {
+      const story = this.workflow.stories.find(o => o.id == data.id)
+      story.hours_allocated = data.hours_allocated
+      story.id = data.id
+      story.title = data.title
+    },
     closeForm() {
       if (this.$refs.inputfield) {
         this.AddNew = false
@@ -146,7 +158,7 @@ export default {
         this.workflow.stories.push(resp.data)
       }).catch(console.error)
     },
-    log: function(e) {
+    log(e) {
       if (e.added || e.moved) {
         const data = {
           id: this.workflow.id,

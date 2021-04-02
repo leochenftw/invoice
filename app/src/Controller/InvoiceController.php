@@ -2,12 +2,17 @@
 
 namespace App\Web\Controller;
 
+use SilverStripe\Dev\Debug;
 use App\Web\Model\Invoice;
 use Mpdf\Mpdf;
 use Page;
 use PageController;
 use SilverStripe\Core\Convert;
 use SilverStripe\View\Requirements;
+use Pelago\Emogrifier\CssInliner;
+use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
+use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
+use SilverStripe\Control\Director;
 
 class InvoiceController extends PageController
 {
@@ -33,7 +38,18 @@ class InvoiceController extends PageController
         if (!empty($id) && is_numeric($id)) {
             if ($invoice = Invoice::get()->byID($id)) {
                 $str = $this->customise($invoice)->renderWith(Invoice::class);
+                $basepath = Director::baseFolder();
 
+                $css = file_get_contents("{$basepath}/public/_resources/app/client/dist/vendor.css");
+                $css .= file_get_contents("{$basepath}/public/_resources/app/client/dist/app.css");
+                $css .= file_get_contents("{$basepath}/public/_resources/app/client/dist/pdf.css");
+
+                $domDocument = CssInliner::fromHtml($str)->inlineCss($css)->getDomDocument();
+
+                HtmlPruner::fromDomDocument($domDocument)->removeElementsWithDisplayNone();
+                $str = CssToAttributeConverter::fromDomDocument($domDocument)
+                  ->convertCssToVisualAttributes()->render();
+// return $str;
                 $mpdf = new Mpdf([
                     'mode' => 'utf-8',
                     'CSSselectMedia' => 'screen',
@@ -46,7 +62,7 @@ class InvoiceController extends PageController
 
                 $client = $invoice->Client()->exists() ? (' - ' . $invoice->Client()->Title) : '';
 
-                return $mpdf->Output("Invoice#{$invoice->Title}{$client}.pdf", 'D');
+                return $mpdf->Output("Invoice#{$invoice->Title}{$client}.pdf", 'I');
             }
         }
 
@@ -144,7 +160,9 @@ class InvoiceController extends PageController
         parent::init();
 
         if ('export' == $this->request->param('action')) {
-            Requirements::css('leochenftw/leoss4bk: client/dist/pdf.css');
+            Requirements::block('leochenftw/leoss4bk: client/dist/vendor.css');
+            Requirements::block('leochenftw/leoss4bk: client/dist/app.css');
+            Requirements::block('leochenftw/leoss4bk: client/dist/pdf.css');
             Requirements::block('leochenftw/leoss4bk: client/dist/vendor.js');
             Requirements::block('leochenftw/leoss4bk: client/dist/app.js');
         }

@@ -37,7 +37,7 @@
                                         <p style="margin: 0;"><strong>Not GST Registered</strong></p>
                                     <% end_if %>
                                 </div>
-                                <div style="width: 100%; clear: both;"></div>
+                                <div class="clear"></div>
                             </div>
                             <div class="row" style="display: block; margin-left: 0; margin-right: 0;">
                                 <div class="pb-0 col col-12">
@@ -56,6 +56,7 @@
                                               </div>
                                             <% end_if %>
                                         </div>
+                                        <div class="clear"></div>
                                     </div>
                                 </div>
                                 <div style="float: left; width: 25%;" class="col col-3">
@@ -64,6 +65,7 @@
                                     <h3 style="margin: 0;" class="h3">Due date</h3>
                                     <p style="margin-top: 0;">$Due</p>
                                 </div>
+                                <div class="clear"></div>
                             </div>
                             <hr role="separator" style="margin-bottom: 0;" aria-orientation="horizontal" class="v-divider theme--light">
                             <div class="v-data-table theme--light">
@@ -71,33 +73,33 @@
                                     <table style="width: 100%; border-spacing: 0;">
                                         <thead class="v-data-table-header">
                                             <tr>
-                                                <th style="border-bottom: 1 solid #d8d8d8; padding: 0 16px 0 0; height: 48px; font-size: 12px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: left;" role="columnheader" scope="col" aria-label="Description"><span>Description</span></th>
-                                                <th style="border-bottom: 1 solid #d8d8d8; padding: 0 16px; height: 48px; font-size: 12px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: right;" role="columnheader" scope="col" aria-label="Hours" class="text-end"><span>Hours</span></th>
-                                                <th style="border-bottom: 1 solid #d8d8d8; padding: 0 16px; height: 48px; font-size: 12px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: right;" role="columnheader" scope="col" aria-label="Hourly Rate" class="text-end"><span>Hourly Rate</span></th>
-                                                <th style="border-bottom: 1 solid #d8d8d8; padding: 0 0 0 16px; height: 48px; font-size: 12px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: right;" role="columnheader" scope="col" aria-label="Total price" class="text-end"><span>Total price</span></th>
+                                                <th style="border-bottom: 1px solid #d8d8d8; padding: 0 16px 0 0; height: 48px; font-size: 12px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: left;" role="columnheader" scope="col" aria-label="Description"><span>Description</span></th>
+                                                <th style="border-bottom: 1px solid #d8d8d8; padding: 0 16px; height: 48px; font-size: 12px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: right;" role="columnheader" scope="col" aria-label="Hours" class="text-end"><span>Hours</span></th>
+                                                <th style="border-bottom: 1px solid #d8d8d8; padding: 0 16px; height: 48px; font-size: 12px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: right;" role="columnheader" scope="col" aria-label="Hourly Rate" class="text-end"><span>Hourly Rate</span></th>
+                                                <th style="border-bottom: 1px solid #d8d8d8; padding: 0 0 0 16px; height: 48px; font-size: 12px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: right;" role="columnheader" scope="col" aria-label="Total price" class="text-end"><span>Total price</span></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <% loop $StoredLogs %>
                                                 <tr class="">
-                                                    <td style="border-bottom: 1 solid #d8d8d8; padding: 0 16px 0 0; height: 48px; font-size: 14px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: left;">$title</td>
-                                                    <td style="border-bottom: 1 solid #d8d8d8; padding: 0 16px; height: 48px; font-size: 14px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: right;">
+                                                    <td style="border-bottom: 1px solid #d8d8d8; padding: 0 16px 0 0; height: 48px; font-size: 14px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: left;">$title</td>
+                                                    <td style="border-bottom: 1px solid #d8d8d8; padding: 0 16px; height: 48px; font-size: 14px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: right;">
                                                         $Top.numberFormatter($hours)
                                                     </td>
-                                                    <td style="border-bottom: 1 solid #d8d8d8; padding: 0 16px; height: 48px; font-size: 14px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: right;">
+                                                    <td style="border-bottom: 1px solid #d8d8d8; padding: 0 16px; height: 48px; font-size: 14px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: right;">
                                                         ${$Top.numberFormatter($hourly_rate)}
                                                     </td>
-                                                    <td style="border-bottom: 1 solid #d8d8d8; padding: 0 0 0 16px; height: 48px; font-size: 14px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: right;">
+                                                    <td style="border-bottom: 1px solid #d8d8d8; padding: 0 0 0 16px; height: 48px; font-size: 14px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: right;">
                                                         ${$Top.numberFormatter($sum)}
                                                     </td>
                                                 </tr>
                                             <% end_loop %>
                                             <tr>
-                                                <td colspan="3"  style="border-bottom: 1 solid #d8d8d8; padding: 0 16px; height: 48px; font-size: 14px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: right;" class="text-right">Subtotal</td>
-                                                <td style="border-bottom: 1 solid #d8d8d8; padding: 0 0 0 16px; height: 48px; font-size: 14px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: right;" class="text-right">$Subtotal</td>
+                                                <td colspan="3"  style="border-bottom: 1px solid #d8d8d8; padding: 0 16px; height: 48px; font-size: 14px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: right;" class="text-right">Subtotal</td>
+                                                <td style="border-bottom: 1px solid #d8d8d8; padding: 0 0 0 16px; height: 48px; font-size: 14px; line-height: 18px; font-family: 'Roboto',sans-serif; text-align: right;" class="text-right">$Subtotal</td>
                                             </tr>
                                             <tr>
-                                                <th style="color: #e91e63; font-size: 36px; font-weight: 500; height: 72px; font-family: 'Roboto',sans-serif; text-align: right;" colspan="4" class="title text-right grand-total">$Grandtotal</th>
+                                              <td colspan="4" class="title text-right grand-total"><span>$Grandtotal</span></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -107,6 +109,7 @@
                                 <div class="col col-12">
                                     $FooterContent.RAW
                                 </div>
+                                <div class="clear"></div>
                             </div>
                             <% if $Paid %>
                                 <span style="font-size: 3rem; font-weight: 700; border: 0.25rem solid #555; display: block; padding: 0.25rem 1rem; text-transform: uppercase; border-radius: 1rem; font-family: 'Courier'; -webkit-mask-image: url('/_resources/app/client/images/grunge.png'); -webkit-mask-size: 944px 604px; mix-blend-mode: multiply; color: #0A9928; border: 0.5rem solid #0A9928; -webkit-mask-position: 13rem 6rem; border-radius: 0; position: absolute; bottom: 2rem; right: 1rem;" class="stamp is-approved">PAID</span>

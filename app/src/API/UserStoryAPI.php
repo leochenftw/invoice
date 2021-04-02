@@ -54,7 +54,7 @@ class UserStoryAPI extends RestfulController
                 return $this->{$action}();
             }
 
-            $title = Convert::raw2sql($request->postVar('title'));
+            $title = $request->postVar('title');
 
             if (empty($title)) {
                 return $this->httpError(400, 'User story cannot be empty');
@@ -78,8 +78,8 @@ class UserStoryAPI extends RestfulController
 
     private function update()
     {
-        $title = Convert::raw2sql($this->request->postVar('title'));
-        $description = Convert::raw2sql($this->request->postVar('content'));
+        $title = $this->request->postVar('title');
+        $description = $this->request->postVar('content');
         $hours_allocated = Convert::raw2sql($this->request->postVar('hours_allocated'));
 
         if (empty($title)) {

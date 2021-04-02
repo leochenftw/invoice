@@ -1,15 +1,37 @@
 #app {
+  font-family: sans-serif;
+  * {
+    font-family: sans-serif;
+  }
   .row {
-    &:after {
-      clear: both;
-      content: '';
-      display: table;
-    }
+    display: block;
+    margin: 0;
 
     .col {
       float: left;
       padding-left: 0;
       padding-right: 0;
     }
+  }
+
+  .clear {
+    clear: both;
+    content: '';
+    display: table;
+  }
+
+  .grand-total {
+    color: #e91e63;
+    height: 72px !important;
+    font-family: sans-serif;
+    text-align: right;
+    span {
+      font-size: 36px !important;
+      font-weight: 500 !important;
+    }
+  }
+
+  .invoice-footer {
+    margin-top: 0 !important;
   }
 }

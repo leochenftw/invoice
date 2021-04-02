@@ -11,7 +11,6 @@
         label="Title*"
         required
         v-model="fullstory.title"
-        readonly
       ></v-text-field>
     </v-card-title>
     <v-card-text>
@@ -207,10 +206,11 @@ export default {
 
       this.$store.dispatch("updateUserStory", data).then(resp => {
         this.dialog = false
+        this.$bus.$emit("updateCard", resp.data)
         setTimeout(() => {
           this.submitting = false
           this.fullstory = null
-        }, 300);
+        }, 300)
       }).catch(error => {
         this.submitting = false
       })
